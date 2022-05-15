@@ -239,6 +239,9 @@
     grid-row: 1;
     height: 32rem;
   }
+  .btn-full.margin-right-sm {
+    margin-right: 1.6rem;
+  }
 }
 
 /* 
