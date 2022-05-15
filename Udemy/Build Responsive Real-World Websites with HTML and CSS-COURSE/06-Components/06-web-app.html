@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wep-app component</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+      }
+      body {
+        font-size: 24px;
+        height: 100vh;
+        text-align: center;
+        font-weight: bold;
+        font-family: sans-serif;
+
+        display: grid;
+        grid-template-columns: 80px 400px 1fr 250px;
+        grid-template-rows: 80px 1fr;
+      }
+      nav,
+      menu,
+      section,
+      main,
+      aside {
+        padding-top: 24px;
+      }
+      nav {
+        grid-row: 1/-1;
+        color: #fff;
+        background-color: #343a40;
+      }
+      menu {
+        grid-column: 2/-1;
+        color: #fff;
+        background-color: #7048e8;
+
+        display: flex;
+        /* justify-content: space-between; */
+        align-items: center;
+        padding: 0 40px;
+        gap: 12px;
+      }
+      button {
+        font-size: 16px;
+        background-color: #5f3dc5;
+        border: none;
+        cursor: pointer;
+        color: #fff;
+        padding: 8px 12px;
+      }
+      button:last-child {
+        background-color: #d6336c;
+        margin-left: auto;
+      }
+      section,
+      aside {
+        background-color: #e9ecef;
+      }
+      section {
+        display: flex;
+        gap: 36px;
+        flex-direction: column;
+        padding: 40px;
+        overflow-y: scroll;
+      }
+
+      .inbox {
+        width: 1fr;
+        padding: 36px 0;
+        background-color: #adb5bd;
+        margin: 0 36px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>Nav</nav>
+    <menu>
+      <button>New</button>
+      <button>Reply</button>
+      <button>Forward</button>
+      <button>Mark unread</button>
+      <button>Trash</button>
+    </menu>
+    <section>
+      <div class="inbox">Email1</div>
+      <div class="inbox">Email2</div>
+      <div class="inbox">Email3</div>
+      <div class="inbox">Email4</div>
+      <div class="inbox">Email5</div>
+      <div class="inbox">Email6</div>
+      <div class="inbox">Email7</div>
+      <div class="inbox">Email8</div>
+      <div class="inbox">Email9</div>
+      <div class="inbox">Email10</div>
+    </section>
+    <main>Email view</main>
+    <aside>Additional info</aside>
+  </body>
+</html>
