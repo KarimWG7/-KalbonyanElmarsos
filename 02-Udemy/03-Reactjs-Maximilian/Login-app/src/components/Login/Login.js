@@ -38,17 +38,17 @@ const Login = (props) => {
     value: "",
     isValid: null,
   });
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
   ///////////////////
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     setFormIsValid(
-  //       enteredEmail.includes("@") && enteredPassword.trim().length > 6
-  //     );
-  //   }, 1000);
-  //   return () => {
-  //     clearTimeout(timeout);
-  //   };
-  // }, [enteredEmail, enteredPassword]);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setFormIsValid(emailState.isValid && passwordState.isValid);
+    }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [emailIsValid, passwordIsValid]);
 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT_EMAIL", val: event.target.value });
