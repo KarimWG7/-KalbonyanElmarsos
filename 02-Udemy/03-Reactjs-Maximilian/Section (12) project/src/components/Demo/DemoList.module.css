@@ -1,0 +1,11 @@
+.list ul {
+  list-style: none;
+  padding: 0;
+}
+.list li {
+  padding: 0.5rem;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
