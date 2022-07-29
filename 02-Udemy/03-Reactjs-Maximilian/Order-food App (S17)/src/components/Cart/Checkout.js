@@ -46,14 +46,13 @@ const Checkout = (props) => {
     if (!formIsValid) {
       return;
     }
-    // if (formIsValid) {
-    //   setFormInputValidity({
-    //     name: enteredName,
-    //     street: enteredStreet,
-    //     city: enteredCity,
-    //     postalCode: enteredPostalCode,
-    //   });
-    // }
+ 
+    props.onConfirm({
+      name: enteredName,
+      street: enteredStreet,
+      city: enteredCity,
+      postalCode: enteredPostalCode,
+    });
   };
 
   return (
