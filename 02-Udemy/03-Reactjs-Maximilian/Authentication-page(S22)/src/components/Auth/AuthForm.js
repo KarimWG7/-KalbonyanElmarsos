@@ -47,7 +47,7 @@ const authCtx = useContext(AuthContext)
         if (res.ok) {
           return res.json();
         } else {
-         return res.json().then((data) => {
+          return res.json().then((data) => {
             let errorMessage = "Authentication failed!";
             if (data && data.error && data.error.message) {
               errorMessage = data.error.message;
@@ -57,8 +57,11 @@ const authCtx = useContext(AuthContext)
         }
       })
       .then((data) => {
-       authCtx.login(data.idToken)
-       history.replace('/')
+        const expirationTime = new Date(
+          new Date().getTime() + +data.expiresIn * 1000
+        );
+        authCtx.login(data.idToken, expirationTime.toISOString());
+        history.replace("/");
       })
       .catch((err) => {
         alert(err.message);
