@@ -1,50 +1,59 @@
 import { Fragment } from "react";
+import { MongoClient, ObjectId } from "mongodb";
 
 import MeetupDetail from "../components/meetups/MeetupDetail";
+import Head from "next/head";
 
-const MeetupDetails = ({meetupData}) => {
+const MeetupDetails = ({ meetupData }) => {
   return (
+    <Fragment>
+      <Head>
+        <title>{meetupData.title}</title>
+        <meta name="description" content={meetupData.description}/>
+      </Head>
     <MeetupDetail
       image={meetupData.image}
       title={meetupData.title}
       address={meetupData.address}
       description={meetupData.description}
     />
+    </Fragment>
   );
 };
 export async function getStaticPaths() {
+  const client = await MongoClient.connect(
+    "mongodb+srv://karimwg:01002657702Ww@cluster0.vfrr7uj.mongodb.net/meetups?retryWrites=true&w=majority"
+  );
+  const db = client.db();
+  const meetupsCollection = db.collection("meetups");
+  const meetups = await meetupsCollection.find({}, { _id: 1 }).toArray();
+  client.close();
   return {
     fallback: false,
-    paths: [
-      {
-        params: {
-          meetupId: "m1",
-        },
-      },
-      {
-        params: {
-          meetupId: "m2",
-        },
-      },
-      {
-        params: {
-          meetupId: "m3",
-        },
-      },
-    ],
+    paths: meetups.map((meetup) => ({
+      params: { meetupId: meetup._id.toString() },
+    })),
   };
 }
 export async function getStaticProps(context) {
   const meetupId = context.params.meetupId;
+
+  const client = await MongoClient.connect(
+    "mongodb+srv://karimwg:01002657702Ww@cluster0.vfrr7uj.mongodb.net/meetups?retryWrites=true&w=majority"
+  );
+  const db = client.db();
+  const meetupsCollection = db.collection("meetups");
+  const selectedMeetup = await meetupsCollection.findOne({_id: ObjectId(meetupId)})
+  client.close();
+
   return {
     props: {
       meetupData: {
-        id: meetupId,
-        image:
-          "https://images.unsplash.com/photo-1567589602992-778bb34d417b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGFuZG1hcmtzfGVufDB8MHwwfHw%3D&auto=format&fit=crop&w=400&q=60",
-        title: "A First Meetup",
-        address: "Some Street 5, Some City",
-        description: "The meetup description",
+        id: selectedMeetup._id.toString(),
+        title: selectedMeetup.title,
+        description: selectedMeetup.description,
+        image: selectedMeetup.image,
+        address: selectedMeetup.address,
       },
     },
   };

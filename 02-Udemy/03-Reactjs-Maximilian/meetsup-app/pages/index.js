@@ -1,35 +1,22 @@
-import { useEffect, useState } from "react";
-import MeetupList from "../components/meetups/MeetupList";
+import Head from "next/head";
+import { MongoClient } from "mongodb";
 
-const DUMMY_MEETUPS = [
-  {
-    id: "m1",
-    title: "A First Meetup",
-    image:
-      "https://images.unsplash.com/photo-1567589602992-778bb34d417b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGFuZG1hcmtzfGVufDB8MHwwfHw%3D&auto=format&fit=crop&w=400&q=60",
-    address: "Some address 5, 123456 some place ",
-    description: "This is a first meetup",
-  },
-  {
-    id: "m2",
-    title: "A Second Meetup",
-    image:
-      "https://images.unsplash.com/photo-1502091094786-a83d1eaa36e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzJ8fGxhbmRtYXJrc3xlbnwwfDB8MHx8&auto=format&fit=crop&w=400&q=60",
-    address: "Some address 5, 123456 some place ",
-    description: "This is a second meetup",
-  },
-  {
-    id: "m3",
-    title: "A Third Meetup",
-    image:
-      "https://images.unsplash.com/photo-1523540499309-18d7a30ddf76?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mjh8fGxhbmRtYXJrc3xlbnwwfDB8MHx8&auto=format&fit=crop&w=400&q=60",
-    address: "Some address 5, 123456 some place ",
-    description: "This is a third meetup",
-  },
-];
+import MeetupList from "../components/meetups/MeetupList";
+import { Fragment } from "react";
 
 const HomePage = (props) => {
-  return <MeetupList meetups={props.meetups} />;
+  return (
+    <Fragment>
+      <Head>
+        <title>React Meetups</title>
+        <meta
+          name="description"
+          content="Browse a huge list of highly active react meetups!"
+        />
+      </Head>
+      <MeetupList meetups={props.meetups} />
+    </Fragment>
+  );
 };
 
 // export async function getServerSideProps(context) {
@@ -47,11 +34,27 @@ const HomePage = (props) => {
 
 export async function getStaticProps() {
   // fetch data from an API
+  const client = await MongoClient.connect(
+    "mongodb+srv://karimwg:01002657702Ww@cluster0.vfrr7uj.mongodb.net/meetups?retryWrites=true&w=majority"
+  );
+  const db = client.db();
+  const meetupsCollection = db.collection("meetups");
+  const meetups = await meetupsCollection.find().toArray();
+  client.close();
+
   return {
     props: {
-      meetups: DUMMY_MEETUPS,
+      meetups: meetups.map((meetup) => {
+        return {
+          title: meetup.title,
+          address: meetup.address,
+          image: meetup.image,
+          description: meetup.description,
+          id: meetup._id.toString(),
+        };
+      }),
     },
-    revalidate: 60,
+    revalidate: 1,
   };
 }
 
