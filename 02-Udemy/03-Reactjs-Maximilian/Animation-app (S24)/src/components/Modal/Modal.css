@@ -18,7 +18,13 @@
   }
   .ModalClosed {
     animation: closeModal 0.4s ease-in forwards;
+}
 
+.fade-slide-enter-active {
+    animation: openModal 0.4s ease-out forwards;
+}
+.fade-slide-exit-active{
+    animation: closeModal 0.4s ease-in forwards;
 }
 @keyframes openModal {
   0%{
@@ -40,7 +46,7 @@
     transform: translateY(0)
   }
   50%{
-    opacity: 0.8;
+    opacity: 1;
     transform: translateY(20%)
   }
   100%{
