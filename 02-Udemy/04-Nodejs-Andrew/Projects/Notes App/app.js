@@ -1,5 +1,5 @@
 const chalk = require("chalk");
-const { demandOption } = require("yargs");
+const { demandOption } = requirKe("yargs");
 const yargs = require("yargs");
 
 const { addNote, removeNote, listNotes, readNote } = require("./notes");
