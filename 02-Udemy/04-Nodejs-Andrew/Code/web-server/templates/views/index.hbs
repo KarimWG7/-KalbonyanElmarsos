@@ -10,9 +10,17 @@
   </head>
   <body>
     <div class="main-content">
-     {{>header}}
-     <p>Use this site to get your weather!</p>
+      {{>header}}
+      <p>Use this site to get your weather!</p>
+
+      <form>
+        <input type="text" name="address" id="address" placeholder="Enter Your Adrress">
+        <button type="submit" class="button">Get Forecast</button>
+      </form>
+      <p class="p1"></p>
+      <p class="p2"></p>
     </div>
+
     {{>footer}}
   </body>
 </html>
