@@ -5,6 +5,7 @@ const { geocode } = require("./utils/geocode");
 const { forecast } = require("./utils/forecast");
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 // define paths for express config
 const publicDirPath = path.join(__dirname, "../public/");
@@ -21,7 +22,7 @@ app.use(express.static(publicDirPath));
 
 app.get("", (req, res) => {
   res.render("index", {
-    title: "Weather App",
+    title: "Weather",
     name: "Karim Ghanem",
   });
 });
@@ -59,7 +60,7 @@ app.get("/weather", (req, res) => {
         return res.send({ error });
       }
       res.send({
-        forecast: data,
+        forecast: `The weather is ${data.weather_descriptions[0]} and it's currently ${data.temperature} degrees out there and it feels like ${data.feelslike} degrees and the humidity is ${data.humidity}%.`,
         location: response.location,
         address: address,
       });
@@ -79,6 +80,6 @@ app.get("*", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("App is listening on port 3000");
+app.listen(port, () => {
+  console.log("App is listening on port " + port);
 });
