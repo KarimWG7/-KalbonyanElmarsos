@@ -13,28 +13,36 @@ MongoClient.connect(
     }
     const db = client.db(databaseName);
 
-    // db.collection("users").findOne(
-    //   { name: "Karim", age: 12 },
-    //   (error, user) => {
-    //     if (error) {
-    //       return console.log("unable to fetch user");
-    //     }
-    //     if (!user) {
-    //       return console.log("there is no user with these specifications");
-    //     }
-    //     console.log(user);
+    // const updatePromise = db.collection("users").updateOne(
+    //   { name: "karim" },
+    //   {
+    //     $inc: {
+    //       age: 2,
+    //     },
     //   }
     // );
-    db.collection('users').
-    db.collection("users")
-      .find({ age: 22 })
-      .toArray((error, users) => {
-        console.log(users);
-      });
-    db.collection("users")
-      .find({ age: 22 })
-      .count((error, count) => {
-        console.log(count);
+    // updatePromise
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log("Error: " + err);
+    //   });
+
+    db.collection("tasks")
+      .updateMany(
+        { completed: false },
+        {
+          $set: {
+            completed: true,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log("Error: " + err);
       });
   }
 );
