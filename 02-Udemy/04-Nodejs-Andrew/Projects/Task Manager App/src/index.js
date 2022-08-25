@@ -41,6 +41,31 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
+app.patch("/users/:id", async (req, res) => {
+  const _id = req.params.id;
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["name", "email", "password", "age"];
+  const isValidOperation = updates.every((item) =>
+    allowedUpdates.includes(item)
+  );
+
+  try {
+    if (!isValidOperation) {
+      return res.status(400).send({ error: "Invalid Operation!" });
+    }
+    const user = await User.findByIdAndUpdate(_id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    res.send(user);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 app.post("/tasks", async (req, res) => {
   const task = new Task(req.body);
   try {
@@ -61,19 +86,43 @@ app.get("/tasks", async (req, res) => {
 });
 app.get("/tasks/:id", async (req, res) => {
   const taskId = req.params.id;
-  try{
-    const task = await Task.findById(taskId)
-    if(!task){
-      return res.status(404).send("there is no task")
+  try {
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return res.status(404).send("there is no task");
     }
-    res.send(task)
-  }catch(err){
-    res.status(500).send(err)
+    res.send(task);
+  } catch (err) {
+    res.status(500).send(err);
   }
-  
+});
+
+app.patch("/tasks/:id", async (req, res) => {
+  const taskId = req.params.id;
+  const allowedUpdates = ["description", "completed"];
+  const updates = Object.keys(req.body);
+  const isValid = updates.every((item) => allowedUpdates.includes(item));
+
+  if (!isValid) {
+    return res.status(400).send({ error: "Invalid Operation" });
+  }
+
+  try {
+    const task = await Task.findByIdAndUpdate(taskId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!task) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    res.send(task);
+  } catch (err) {
+    res.status(400).send(err);
+  }
 });
 
 app.listen(port, () => {
   console.log("Server is listening on https://localhost:3000");
 });
-im
