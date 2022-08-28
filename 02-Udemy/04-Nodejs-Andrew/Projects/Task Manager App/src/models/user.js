@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const User = mongoose.model("User", {
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
     trim: true,
   },
   email: {
+    unique: true,
     type: String,
     required: true,
     trim: true,
@@ -38,6 +41,54 @@ const User = mongoose.model("User", {
       }
     },
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
+
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+
+  const token = await jwt.sign(
+    user._id.toString(),
+    "thisismelearningthecourse"
+  );
+
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+
+  return token;
+};
+
+userSchema.statics.findByCredintials = async (email, password) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error("Unable to login!");
+  }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error("Unable to login:- Password is wrong!");
+  }
+  return user;
+};
+
+// The word (this) here refere to the document that will be saved
+// hashing the password before saving
+userSchema.pre("save", async function (next) {
+  const user = this;
+
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+
+  next();
+});
+
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
