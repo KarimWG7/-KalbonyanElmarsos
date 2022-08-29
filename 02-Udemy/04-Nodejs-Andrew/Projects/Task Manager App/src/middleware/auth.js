@@ -6,12 +6,14 @@ const auth = async (req, res, next) => {
     const token = req.header("Authorization").replace("Bearer ", "");
     const decoded = jwt.verify(token, "thisismelearningthecourse");
     const user = await User.findOne({
-      _id: decoded._id,
+      _id: decoded,
       "tokens.token": token,
     });
     if (!user) {
+      res.status(404)
       throw new Error();
     }
+    req.token = token
     req.user = user;
     next();
 
@@ -21,3 +23,4 @@ const auth = async (req, res, next) => {
 };
 
 module.exports = auth;
+ 
