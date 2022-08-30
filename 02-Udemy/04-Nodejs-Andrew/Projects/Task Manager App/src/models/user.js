@@ -5,55 +5,61 @@ const jwt = require("jsonwebtoken");
 
 const Task = require("./task");
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    unique: true,
-    type: String,
-    required: true,
-    trim: true,
-    lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("You must input a valid email");
-      }
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-  },
-  age: {
-    type: Number,
-    default: 0,
-    validate(value) {
-      if (value < 0) {
-        throw new Error("Age must be a positive number");
-      }
-    },
-  },
-  password: {
-    type: String,
-    required: true,
-    minLength: 7,
-    trim: true,
-    validate(value) {
-      if (validator.contains(value, "password")) {
-        throw new Error("Password mustnot contain the word password");
-      }
-    },
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
+    email: {
+      unique: true,
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("You must input a valid email");
+        }
       },
     },
-  ],
-}, {
-  timestamps: true
-});
+    age: {
+      type: Number,
+      default: 0,
+      validate(value) {
+        if (value < 0) {
+          throw new Error("Age must be a positive number");
+        }
+      },
+    },
+    password: {
+      type: String,
+      required: true,
+      minLength: 7,
+      trim: true,
+      validate(value) {
+        if (validator.contains(value, "password")) {
+          throw new Error("Password mustnot contain the word password");
+        }
+      },
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    avatar: {
+      type: Buffer,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 // virtual property
 userSchema.virtual("tasks", {
@@ -78,12 +84,13 @@ userSchema.methods.generateAuthToken = async function () {
 
 userSchema.methods.toJSON = function () {
   const user = this;
-  const data = user.toObject();
+  const userObject = user.toObject();
 
-  delete data.password;
-  delete data.tokens;
+  delete userObject.password;
+  delete userObject.tokens;
+  delete userObject.avatar;
 
-  return data;
+  return userObject;
 };
 
 userSchema.statics.findByCredintials = async (email, password) => {
