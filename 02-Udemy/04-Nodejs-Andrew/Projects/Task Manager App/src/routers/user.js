@@ -144,7 +144,7 @@ router.get("/users/:id/avatar", async (req, res) => {
 router.delete("/users/me", auth, async (req, res) => {
   try {
     await req.user.remove();
-    sendCancelEmail(req.user.email, req.user.name)
+    sendCancelEmail(req.user.email, req.user.name);
     res.send(req.user);
   } catch (err) {
     res.status(500).send(err);
