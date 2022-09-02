@@ -5,6 +5,8 @@ const form = document.querySelector("form");
 const sendLocation = document.getElementById("send-location");
 const messageInput = form.querySelector("input");
 const messages = document.getElementById("messages");
+const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML;
+const sidebar = document.getElementById("sidebar");
 
 // Templates
 const messageTemplate = document.getElementById("message-template").innerHTML;
@@ -32,6 +34,13 @@ socket.on("message", (message) => {
     createdAt: moment(message.createdAt).format("hh:mm a"),
   });
   messages.insertAdjacentHTML("beforeend", html);
+});
+socket.on("roomData", ({ room, users }) => {
+  const html = Mustache.render(sidebarTemplate, {
+    room,
+    users,
+  });
+  sidebar.innerHTML = html;
 });
 
 form.addEventListener("submit", (e) => {
